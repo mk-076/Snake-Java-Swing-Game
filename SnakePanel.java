@@ -29,6 +29,9 @@ public class SnakePanel extends JPanel implements KeyListener {
     int yVelocity = 0;
     int xVelocity = 0;
 
+    // Score
+    int score = 0;
+
     boolean isGameOver = false;
 
     Timer timer;
@@ -38,7 +41,7 @@ public class SnakePanel extends JPanel implements KeyListener {
 
         setPreferredSize(new Dimension(lines * tileSize, lines * tileSize));
         setBackground(Color.BLACK);
-        
+
         this.lines = lines;
         this.tileSize = tileSize;
 
@@ -50,20 +53,19 @@ public class SnakePanel extends JPanel implements KeyListener {
         snakeHead = new Tile(0, 0);
         snakeBody = new ArrayList<Tile>();
 
-        timer = new Timer(200, new ActionListener() {
+        timer = new Timer(100, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (isColliding(snakeHead, apple)) {
                     snakeBody.add(new Tile(apple.x, apple.y));
                     placeApple();
+                    score += 10;
                 }
 
                 if (isOutOfBounds(snakeHead)) {
                     isGameOver = true;
                 }
-
-                
 
                 if (!isGameOver) {
                     move();
@@ -114,7 +116,7 @@ public class SnakePanel extends JPanel implements KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        
         // Draw Apple
         g.setColor(Color.RED);
         g.fillRect(apple.x * tileSize, apple.y * tileSize, tileSize, tileSize);
@@ -139,6 +141,9 @@ public class SnakePanel extends JPanel implements KeyListener {
                 bodyPart.y = snakeHead.y;
             }
         }
+
+        // Draw Score
+        g.drawString("Score: " + score, 10, 50);
     }
 
     @Override
